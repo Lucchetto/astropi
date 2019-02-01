@@ -50,7 +50,7 @@ with open(file_name, 'a+') as data_file:
         print(current_data)
         data_writer.writerow(current_data)
         data_file.flush()
-        
+        sleep(0.75)
         #do_you_see_any_face = faces.find_faces()
         if do_you_see_any_face == False:
             sense.clear()
