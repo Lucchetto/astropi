@@ -54,7 +54,7 @@ face_service.start()
 start_time = strftime("%Y-%m-%d %H:%M:%S", gmtime())
 file_name = "data_" + start_time + ".csv"
 with open(file_name, 'a+') as data_file:
-    data_file.write("UTC time, Face detection, Latitude, Longitude, Temperature, Pressure, Room brightness\n" )
+    data_file.write("UTC time,Face detection,Latitude,Longitude,Temperature °C,Humidity %,Pressure mbar,Room brightness\n" )
     data_file.flush()
     data_writer = csv.writer(data_file)
     while True:

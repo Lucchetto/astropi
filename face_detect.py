@@ -25,7 +25,7 @@ class face_detection:
         img_brightness = 0.0
         if faces == ():
             self.logger.info("No faces detected")
-            img_brightness = round(cv2.mean(gray_image)[0], 3)
+            img_brightness = round(cv2.mean(gray_image)[0], 1)
         else:
             self.logger.info("Face detected")
             have_face = True
