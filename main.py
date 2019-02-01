@@ -19,9 +19,9 @@ logger.addHandler(log_handler)
 logger.setLevel(logging.DEBUG)
 
 camera = PiCamera()
-camera.resolution = (2592, 1952)
+camera.resolution = (1920, 1088)
 camera.framerate = 15
-rawCapture = PiRGBArray(camera, size=(2592, 1952))
+rawCapture = PiRGBArray(camera, size=(1920, 1088))
 
 sleep(0.1)
 
