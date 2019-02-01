@@ -1,9 +1,10 @@
+import csv
 import face_detect
 import data_acquisition
 import mario
 from picamera.array import PiRGBArray
 from picamera import PiCamera
-from time import sleep
+from time import sleep, gmtime, strftime
 import cv2
 import _thread
 from sense_hat import SenseHat
@@ -36,10 +37,20 @@ def faces_1s():
 
 # Main program
 _thread.start_new_thread(faces_1s, ())
-while True:
-    data_file = open('dati.csv', 'a')
-    data.write_data(data_file, do_you_see_any_face)
-    #do_you_see_any_face = faces.find_faces()
-    if do_you_see_any_face == False:
-        sense.clear()
-        mario_anim.mario_run_anim()
+
+start_time = strftime("%Y-%m-%d %H:%M:%S", gmtime())
+file_name = "data_" + start_time + ".csv"
+with open(file_name, 'a+') as data_file:
+    data_file.write("UTC time, Face detection, Latitude, Longitude, Temperature, Pressure\n" )
+    data_file.flush()
+    data_writer = csv.writer(data_file)
+    while True:
+        current_data = data.write_data(do_you_see_any_face)
+        print(current_data)
+        data_writer.writerow(current_data)
+        data_file.flush()
+        
+        #do_you_see_any_face = faces.find_faces()
+        if do_you_see_any_face == False:
+            sense.clear()
+            mario_anim.mario_run_anim()

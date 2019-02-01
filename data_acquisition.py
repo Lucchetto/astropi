@@ -1,7 +1,6 @@
 # Awais Akram, Zhenxiang Chen, Michele Sallaku, Mattia Zani - AstroPi 2018-2019
 # Enviroment data acquisition
 
-import csv
 from gpiozero import CPUTemperature
 from time import gmtime, strftime
 import ephem
@@ -59,18 +58,23 @@ class data_acq:
         iss_long = str(iss.sublong)
         return iss_lat, iss_long
 
-    def write_data(self, out_file, show_data):
+    def write_data(self, show_data):
         lat, long = self.read_position()
         temp = self.read_temp(show_data)
         humidity = self.read_humidity(show_data)
         pressure = self.read_pressure(show_data)
         p_time = strftime("%Y-%m-%d %H:%M:%S", gmtime())
-        data_array = [lat, long, p_time, temp, humidity, pressure]
-        print(data_array)
-        with out_file:
-            writer = csv.writer(out_file)
-            writer.writerow(data_array)
+        if show_data == True:
+            str_showing_data = "Faces detected !"
+        else:
+            str_showing_data = "I can't see any face"
+        data_array = [p_time, str_showing_data, lat, long, temp, humidity, pressure]
+        # print(data_array)
+        #with out_file:
+        #    writer = csv.writer(out_file)
+        #    writer.writerow(data_array)
 #        out_file.close()
+        return data_array
 
 '''
 sense = SenseHat()
