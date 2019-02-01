@@ -11,10 +11,16 @@ from threading import Thread
 from sense_hat import SenseHat
 from sys import stdout
 
+start_time = strftime("%Y-%m-%d %H:%M:%S", gmtime())
+log_file = "log_" + start_time + ".log"
+
+
 logger = logging.getLogger()
-log_handler = logging.StreamHandler(stdout)
+output_handler = logging.StreamHandler(stdout)
+output_handler.setFormatter(logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s - %(funcName)s - line %(lineno)d"))
+log_handler = logging.FileHandler(log_file)
 log_handler.setFormatter(logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s - %(funcName)s - line %(lineno)d"))
-log_handler.setLevel(logging.DEBUG)
+logger.addHandler(output_handler)
 logger.addHandler(log_handler)
 logger.setLevel(logging.DEBUG)
 
@@ -51,7 +57,6 @@ def faces_1s():
 face_service = Thread(target=faces_1s, args=())
 face_service.start()
 
-start_time = strftime("%Y-%m-%d %H:%M:%S", gmtime())
 file_name = "data_" + start_time + ".csv"
 with open(file_name, 'a+') as data_file:
     data_file.write("UTC time,Face detection,Latitude,Longitude,Temperature °C,Humidity %,Pressure mbar,Room brightness\n" )
