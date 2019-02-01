@@ -1,14 +1,16 @@
 import cv2
+import logging
 # import sys
 # from picamera.array import PiRGBArray
 # from picamera import PiCamera
 # from time import sleep
 
 class face_detection:
-    def __init__(self, src_camera, camera_output, cascade_file):
+    def __init__(self, src_camera, camera_output, cascade_file, logger):
         self.camera = src_camera
         self.cam_output = camera_output
         self.facedata = cascade_file
+        self.logger = logger
     def find_faces(self):
         self.camera.capture(self.cam_output, format="bgr")
         out_image = self.cam_output.array
@@ -22,9 +24,9 @@ class face_detection:
         )
         have_face = False
         if faces == ():
-            print("No faces detected")
+            self.logger.info("No faces detected")
         else:
-            print("Face detected")
+            self.logger.info("Face detected")
             have_face = True
         self.cam_output.truncate(0)
         return have_face

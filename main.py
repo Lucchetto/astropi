@@ -1,6 +1,7 @@
 import csv
 import face_detect
 import data_acquisition
+import logging
 import mario
 from picamera.array import PiRGBArray
 from picamera import PiCamera
@@ -8,6 +9,14 @@ from time import sleep, gmtime, strftime
 import cv2
 from threading import Thread
 from sense_hat import SenseHat
+from sys import stdout
+
+logger = logging.getLogger()
+log_handler = logging.StreamHandler(stdout)
+log_handler.setFormatter(logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s - %(funcName)s - line %(lineno)d"))
+log_handler.setLevel(logging.DEBUG)
+logger.addHandler(log_handler)
+logger.setLevel(logging.DEBUG)
 
 camera = PiCamera()
 camera.resolution = (2592, 1952)
@@ -21,7 +30,7 @@ faceCascade = cv2.CascadeClassifier(cascPath)
 
 sense = SenseHat()
 
-faces = face_detect.face_detection(camera, rawCapture, faceCascade)
+faces = face_detect.face_detection(camera, rawCapture, faceCascade, logger)
 data = data_acquisition.data_acq(sense)
 mario_anim = mario.mario_running(sense)
 
@@ -46,8 +55,8 @@ with open(file_name, 'a+') as data_file:
     data_file.flush()
     data_writer = csv.writer(data_file)
     while True:
+        logger.info("Acquiring data about this place...")
         current_data = data.write_data(do_you_see_any_face)
-        print(current_data)
         data_writer.writerow(current_data)
         data_file.flush()
         sleep(0.75)
