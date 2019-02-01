@@ -6,7 +6,7 @@ from picamera.array import PiRGBArray
 from picamera import PiCamera
 from time import sleep, gmtime, strftime
 import cv2
-import _thread
+from threading import Thread
 from sense_hat import SenseHat
 
 camera = PiCamera()
@@ -36,7 +36,8 @@ def faces_1s():
         # (0.9)
 
 # Main program
-_thread.start_new_thread(faces_1s, ())
+face_service = Thread(target=faces_1s, args=())
+face_service.start()
 
 start_time = strftime("%Y-%m-%d %H:%M:%S", gmtime())
 file_name = "data_" + start_time + ".csv"
