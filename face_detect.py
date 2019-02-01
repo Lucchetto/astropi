@@ -1,5 +1,4 @@
 import cv2
-import logging
 # import sys
 # from picamera.array import PiRGBArray
 # from picamera import PiCamera
