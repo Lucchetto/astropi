@@ -2,7 +2,7 @@
 # Enviroment data acquisition
 
 import csv
-import subprocess
+from gpiozero import CPUTemperature
 from time import gmtime, strftime
 import ephem
 # from sense_hat import SenseHat
@@ -14,23 +14,19 @@ class data_acq:
         self.sense = sense_hat
     
     def read_temp(self, show_data):
-        cputemp = subprocess.check_output("cat /sys/class/thermal/thermal_zone0/temp", shell=True)
-        cputemp = float(cputemp) / 1000
-        temp = self.sense.get_temperature_from_pressure() + self.sense.get_temperature_from_humidity() + self.sense.get_temperature()
-        temp = temp / 3
-        goodtemp = temp - ((cputemp - temp) / 1.65)
-        goodtemp = round(goodtemp, 1)
-        # print (time.strftime('%x %X'))
-        # print (goodtemp)
+        cpu_temp = CPUTemperature().temperature
+        sense_temp = self.sense.get_temperature()
+        good_temp = sense_temp - ((cpu_temp - sense_temp) / 5.466)
+        good_temp = round(good_temp, 1)
         if show_data == True:
-            strtemp = str(goodtemp)
-            if goodtemp >= 25:
+            strtemp = str(good_temp)
+            if good_temp >= 25:
                 self.sense.show_message(strtemp + "'c", text_colour=(155,50,50), scroll_speed=self.text_speed)
-            elif goodtemp < 20:
+            elif good_temp < 20:
                 self.sense.show_message(strtemp + "'c", text_colour=(0,100,255), scroll_speed=self.text_speed)
             else :
                 self.sense.show_message(strtemp + "'c", text_colour=(155,155,155), scroll_speed=self.text_speed)
-        return goodtemp
+        return good_temp
     
     def read_humidity(self, show_data):
         humidity = self.sense.get_humidity()
