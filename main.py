@@ -36,11 +36,14 @@ mario_anim = mario.mario_running(sense)
 
 global do_you_see_any_face
 do_you_see_any_face = False
+global room_brightness
+room_brightness = 0.0
 
 def faces_1s():
     while True:
         global do_you_see_any_face
-        do_you_see_any_face = faces.find_faces()
+        global room_brightness
+        do_you_see_any_face, room_brightness = faces.find_faces()
         
         # (0.9)
 
@@ -51,12 +54,13 @@ face_service.start()
 start_time = strftime("%Y-%m-%d %H:%M:%S", gmtime())
 file_name = "data_" + start_time + ".csv"
 with open(file_name, 'a+') as data_file:
-    data_file.write("UTC time, Face detection, Latitude, Longitude, Temperature, Pressure\n" )
+    data_file.write("UTC time, Face detection, Latitude, Longitude, Temperature, Pressure, Room brightness\n" )
     data_file.flush()
     data_writer = csv.writer(data_file)
     while True:
         logger.info("Acquiring data about this place...")
         current_data = data.write_data(do_you_see_any_face)
+        current_data.append(room_brightness)
         data_writer.writerow(current_data)
         data_file.flush()
         sleep(0.75)

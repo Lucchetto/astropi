@@ -22,13 +22,15 @@ class face_detection:
             flags=cv2.CASCADE_SCALE_IMAGE
         )
         have_face = False
+        img_brightness = 0.0
         if faces == ():
             self.logger.info("No faces detected")
+            img_brightness = round(cv2.mean(gray_image)[0], 3)
         else:
             self.logger.info("Face detected")
             have_face = True
         self.cam_output.truncate(0)
-        return have_face
+        return have_face, img_brightness
 
 '''
 camera = PiCamera()
